@@ -23,6 +23,9 @@ def setup1():
 def setup1():
     return render_template('setup1.html')
 
+@app.route("/temp")
+def temperature():
+
 
 @app.route("/setup1/<email>")
 def setup2(email):
