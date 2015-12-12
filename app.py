@@ -11,10 +11,8 @@ echo=24
 led=[27,17,2,03,04]
 GPIO.setup(trig, GPIO.OUT)
 GPIO.setup(echo,GPIO.IN)
+GPIO.output(x, False)
 
-for i in range(len(led)): 
-    GPIO.setup(led[i], GPIO.OUT)
-    GPIO.output(led[i], GPIO.LOW)
 
   
 @app.route("/")
@@ -59,6 +57,7 @@ def setup3(phoneno):
 @app.route("/home")
 def home():
     return render_template('home.html')
+    GPIO.output(x, False)
     
 
 @app.route("/ldr")
@@ -78,7 +77,9 @@ def ldrDisplay():
     time.sleep(1)
     return str(contamination)
 
-
+@app.route("/openLid")
+def openLid():
+    GPIO.output(x, True)
 @app.route("/ultrasound")
 def ultrasoundDisplay():
    GPIO.output(trig,False)
@@ -94,48 +95,18 @@ def ultrasoundDisplay():
 
    duration=end-start
    cm=duration*17150
-   if cm>200:
-       cm=200
+   if cm>20:
+       cm=20
  
    cm=round(cm,2)
-   fill=200-cm
-   fillpercent=(fill/200)*100
-
-   if cm<=50.0:
-         GPIO.output(led[0], GPIO.HIGH)
-   else:
-        GPIO.output(led[0], GPIO.LOW)
-   if cm<=40.0:
-         GPIO.output(led[1], GPIO.HIGH)
-   else:
-        GPIO.output(led[1], GPIO.LOW)
-
-   if cm<=30.0:
-         GPIO.output(led[2], GPIO.HIGH)
-   else:
-        GPIO.output(led[2], GPIO.LOW)
-
-   if cm<=20.0:
-         GPIO.output(led[3], GPIO.HIGH)
-   else:
-        GPIO.output(led[3], GPIO.LOW)
+   fill=20-cm
+   fillpercent=(fill/20)*100
 
    if cm<=10.0:
-         GPIO.output(led[4], GPIO.HIGH)
-         
+
+        
          sendEmail()
-   else:
-        GPIO.output(led[4], GPIO.LOW)
-
-  
-  
-
-   if cm<=10.0:
-         GPIO.output(led[4], GPIO.HIGH)
-
-         sendEmail()
-   else:
-        GPIO.output(led[4], GPIO.LOW)
+   
 
    return fillpercent
    return "%"
