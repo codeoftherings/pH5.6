@@ -1,0 +1,2 @@
+# pH5.6
+Code for hardware IoT project. Nowadays in these times of acute water shortage, it is extremely important to hold on to as much water as we can lay our hands on. One of the most valuable ways to gather water is by rainwater harvesting. It's practically free to collect rainwater and can be put to numerous uses once filtered. However, such an important process today is largely disorganized and haphazard. It is also disconnected. Our idea is to bring the system together in one unified and integrated module that is connected to the internet. 
