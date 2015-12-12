@@ -8,7 +8,6 @@ gpio.setmode(gpio.BCM)
 ldrpin=21
 trig=23
 echo=24
-led=[27,17,2,03,04]
 GPIO.setup(trig, GPIO.OUT)
 GPIO.setup(echo,GPIO.IN)
 GPIO.output(x, False)
