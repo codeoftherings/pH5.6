@@ -1,41 +1,38 @@
-import RPi.GPIO as gpio
+import RPi.GPIO as GPIO
 import time
 import os, glob, time
 from flask import Flask, render_template
 import smtplib
 app=Flask(__name__)
-gpio.setmode(gpio.BCM)
+GPIO.setmode(GPIO.BCM)
 ldrpin=21
 trig=23
 echo=24
 GPIO.setup(trig, GPIO.OUT)
 GPIO.setup(echo,GPIO.IN)
-GPIO.output(x, False)
-
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
-base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
-device_file = device_folder + '/w1_slave'
+GPIO.setup(28, GPIO.OUT)
+GPIO.output(28, False)
+#toAdd=str(raw_input('add email'))
+toAdd="saggieb12@gmail.com"
+#os.system('modprobe w1-gpio')
+#os.system('modprobe w1-therm')
+#base_dir = '/sys/bus/w1/devices/'
+#device_folder = glob.glob(base_dir + '28*')[0]
+#device_file = device_folder + '/w1_slave'
 
   
 @app.route("/")
 def setup1():
     return render_template('start.html')
 
-@app.route("/setup")
-def setup1():
-    return render_template('setup1.html')
+
 
 @app.route("/temp")
 def temperature():
-    print(read_temp())
+    return render_template('temp.html', tempRead=read_temp())
+    
 
 
-@app.route("/setup1/<email>")
-def setup2(email):
-    toAdd=str(email)
-    return render_template('setup2.html')
 
 def sendEmail():
     username="saggieb12@gmail.com"
@@ -56,26 +53,22 @@ def sendEmail():
 
 
     
-@app.route("/phone/<phoneno>")
-def setup3(phoneno):
-    phone=str(phoneno)
-    return render_template('setup3.html')
 
 
 @app.route("/home")
 def home():
     return render_template('home.html')
-    GPIO.output(x, False)
+    GPIO.output(28, False)
     
 
 @app.route("/ldr")
 def ldrDisplay():
     reading=0
-    gpio.setup(ldrpin,gpio.OUT)
-    gpio.output(ldrpin,gpio.LOW)
+    GPIO.setup(ldrpin,GPIO.OUT)
+    GPIO.output(ldrpin,GPIO.LOW)
     time.sleep(0.2)
-    gpio.setup(ldrpin,gpio.IN)
-    while (gpio.input(ldrpin)==gpio.LOW):
+    GPIO.setup(ldrpin,GPIO.IN)
+    while (GPIO.input(ldrpin)==GPIO.LOW):
         reading=reading+1
     contamination=reading/42
     contamination=round(contamination,2)
@@ -83,11 +76,11 @@ def ldrDisplay():
     print("Ph5.6 contamination factor:")
     print (contamination)
     time.sleep(1)
-    return str(contamination)
+    return render_template('ldr.html', ldr=contamination)
 
 @app.route("/openLid")
 def openLid():
-    GPIO.output(x, True)
+    GPIO.output(28, True)
     return render_template('home_lid_open.html');
     
     
@@ -106,39 +99,38 @@ def ultrasoundDisplay():
 
    duration=end-start
    cm=duration*17150
-   if cm>20:
-       cm=20
+   if cm>10:
+       cm=10
  
    cm=round(cm,2)
-   fill=20-cm
-   fillpercent=(fill/20)*100
-
-   if cm<=10.0:
+   fill=10-cm
+   fillpercent=(fill/10)*100
+   fillpercent=round(fillpercent, 2)
+  # if cm<=10.0:
 
         
-         sendEmail()
+        # sendEmail()
    
 
-   return fillpercent
-   return "%"
+   return render_template('us.html', ultrasound=fillpercent)
 
 
-def read_temp_raw():
-    f = open(device_file, 'r')
-    lines = f.readlines()
-    f.close()
-    return lines
+#def read_temp_raw():
+#    f = open(device_file, 'r')
+#    lines = f.readlines()
+#    f.close()
+#    return lines
  
-def read_temp():
-    lines = read_temp_raw()
-    while lines[0].strip()[-3:] != 'YES':
-        time.sleep(0.2)
-        lines = read_temp_raw()
-    equals_pos = lines[1].find('t=')
-    if equals_pos != -1:
-        temp_string = lines[1][equals_pos+2:]
-        temp_c = float(temp_string) / 1000.0
-        return temp_c
+#def read_temp():
+#    lines = read_temp_raw()
+#    while lines[0].strip()[-3:] != 'YES':
+#        time.sleep(0.2)
+#        lines = read_temp_raw()
+#    equals_pos = lines[1].find('t=')
+  #  if equals_pos != -1:
+ #       temp_string = lines[1][equals_pos+2:]
+#       temp_c = float(temp_string) / 1000.0
+#        return temp_c
 
 if __name__=='__main__':
-        app.run(host='0.0.0.0', port=80, debug=True)
+        app.run(host='0.0.0.0', port=80,debug=True)
