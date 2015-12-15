@@ -8,12 +8,12 @@ GPIO.setmode(GPIO.BCM)
 ldrpin=21
 trig=23
 echo=24
+linkitLink=28
 GPIO.setup(trig, GPIO.OUT)
 GPIO.setup(echo,GPIO.IN)
-GPIO.setup(28, GPIO.OUT)
-GPIO.output(28, False)
+GPIO.setup(linkitLink, GPIO.OUT)
+GPIO.output(linkitLink, False)
 toAdd=str(raw_input('add email'))
-toAdd="saggieb12@gmail.com"
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 base_dir = '/sys/bus/w1/devices/'
@@ -58,7 +58,7 @@ def sendEmail():
 @app.route("/home")
 def home():
     return render_template('home.html')
-    GPIO.output(28, False)
+    GPIO.output(linkitLink, False)
     
 
 @app.route("/ldr")
@@ -80,7 +80,7 @@ def ldrDisplay():
 
 @app.route("/openLid")
 def openLid():
-    GPIO.output(28, True)
+    GPIO.output(linkitLink, True)
     return render_template('home_lid_open.html');
     
     
