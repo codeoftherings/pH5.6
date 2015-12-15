@@ -8,7 +8,7 @@ GPIO.setmode(GPIO.BCM)
 ldrpin=21
 trig=23
 echo=24
-linkitLink=28
+linkitLink=15
 GPIO.setup(trig, GPIO.OUT)
 GPIO.setup(echo,GPIO.IN)
 GPIO.setup(linkitLink, GPIO.OUT)
